@@ -1,0 +1,89 @@
+# Default values for open-webui
+replicaCount: 1
+
+image:
+  repository: ghcr.io/open-webui/open-webui
+  tag: main
+  pullPolicy: Never
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+  automountServiceAccountToken: true
+
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 80
+  nodePort: 30000
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: open-webui.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+resources:
+  requests:
+    memory: "512Mi"
+    cpu: "250m"
+  limits:
+    memory: "1Gi"
+    cpu: "500m"
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+persistence:
+  enabled: true
+
+env:
+  # Ollama configuration
+  OLLAMA_BASE_URL: "http://ollama-service:13140"
+  PORT: "8080"
+  HOST: "0.0.0.0"
+  
+  # Disable embedding model download for offline use
+  OFFLINE_MODE: "true"
+  RAG_EMBEDDING_MODEL_AUTO_UPDATE: "false"
+  
+  # Optional environment variables
+  WEBUI_SECRET_KEY: ""
+  OPENAI_API_KEY: ""
+  OPENAI_API_BASE_URL: ""
+  WEBUI_URL: ""
+
+secrets:
+  webuiSecretKey: ""
+  # Add other secrets as needed
+
+probes:
+  liveness:
+    path: /health
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  readiness:
+    path: /health
+    initialDelaySeconds: 5
+    periodSeconds: 5
