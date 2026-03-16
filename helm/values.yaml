@@ -2,8 +2,9 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/open-webui/open-webui
-  tag: main
+  #repository: ghcr.io/open-webui/open-webui
+  repository: docker.io/library/open-webui-slim
+  tag: v0.8.10
   pullPolicy: Never
 
 imagePullSecrets: []
